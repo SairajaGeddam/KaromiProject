@@ -1,0 +1,80 @@
+﻿@model KaromiProject.ViewModels.EmployeeViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete Employee</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <dl class="dl-horizontal">
+            <dd>
+                @Html.HiddenFor(model => model.Employee.EmployeeId)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Employee.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employee.Email)
+                @Html.HiddenFor(model => model.Employee.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Employee.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employee.Name)
+                @Html.HiddenFor(model => model.Employee.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Employee.Mobile)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employee.Mobile)
+                @Html.HiddenFor(model => model.Employee.Mobile)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Employee.Role)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employee.Role)
+                @Html.HiddenFor(model => model.Employee.Role)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Employee.Project)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employee.Project)
+                @Html.HiddenFor(model => model.Employee.Project)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Employee.Team)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employee.Team)
+                @Html.HiddenFor(model => model.Employee.Team)
+            </dd>
+
+        </dl>
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "List")
+        </div>
+    }
+</div>

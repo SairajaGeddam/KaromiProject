@@ -1,0 +1,123 @@
+﻿@model KaromiProject.ViewModels.EmployeeViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit Employee</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal"> 
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Employee.EmployeeId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Employee.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Employee.Email)
+                @Html.ValidationMessageFor(model => model.Employee.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Employee.Name, new { htmlAttributes = new { @class = "form-control disabled" } })
+                @Html.HiddenFor(model => model.Employee.Name)
+                @Html.ValidationMessageFor(model => model.Employee.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee.Mobile, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Employee.Mobile, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Employee.Mobile, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Employee.Role, new SelectList(Model.Roles), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Employee.Role)
+                @Html.ValidationMessageFor(model => model.Employee.Role, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee.Project, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Employee.Project, new SelectList(Model.Projects), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Employee.Project)
+                @Html.ValidationMessageFor(model => model.Employee.Project, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee.Team, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Employee.Team, new SelectList(""), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Employee.Team)
+                @Html.ValidationMessageFor(model => model.Employee.Team, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "List")
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadTeams($('#Employee_Project').val(), '@Model.Employee.Team');
+
+        $('#Employee_Project').on('change', function () {
+            $('#Employee_Team').empty();
+            loadTeams($(this).val(), '');
+        });
+
+        let role = '@ViewBag.LoggedInEmployee.Role';
+        if (role == 'DEV' || role == 'TL') {
+            $('#Employee_Email').attr('disabled', 'disabled');
+            $('#Employee_Name').attr('disabled', 'disabled');
+            $('#Employee_Role').attr('disabled', 'disabled');
+            $('#Employee_Project').attr('disabled', 'disabled');
+            $('#Employee_Team').attr('disabled', 'disabled');
+        }
+        else if (role == 'PM') {
+            $('#Employee_Role').attr('disabled', 'disabled');
+        }
+
+        function loadTeams(SelectedProject, defaultValue) {
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/DynamicTeams',
+                data: "id=" + SelectedProject,
+                contentType: 'application/json',
+                success: function (teams) {
+                    $('#Employee_Team').append('<option value=>Select Team</option>');
+                    if (teams.length > 0) {
+                        for (var i = 0; i < teams.length; i++) {
+                            $('#Employee_Team').append('<option value=' + teams[i] + '>' + teams[i] + '</option>');
+                        }
+                        $('#Employee_Team').val(defaultValue);
+                    }
+                }
+            });
+        }
+    });
+
+</script>

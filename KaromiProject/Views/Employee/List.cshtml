@@ -1,0 +1,111 @@
+﻿@model KaromiProject.ViewModels.EmployeeViewModel
+
+@{
+    ViewBag.Title = "Employees List";
+}
+
+<h2 style="color:chocolate;">Employees List</h2>
+@if (Model.Employee.Role == KaromiProject.Utilities.Enums.RoleEnums.HR.ToString())
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
+@using (Html.BeginForm("List", "Employee", FormMethod.Post))
+{
+    <p>
+        Find By Name: @Html.TextBox("Search")
+        <input type="submit" value="Search" class="btn btn-success" />
+    </p>
+}
+
+<table class="table" border="1" style="border:ridge;border-color:black;">
+    <tr style="background-color:chocolate;color:whitesmoke;border-bottom:ridge;border-bottom-color:black;">
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Mobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Project)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Team)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Employees)
+    {
+        <tr style="background-color:khaki;color:chocolate;border-bottom:ridge;border-bottom-color:black;">
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Team)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeId })
+                @*@if (Model.Employee.Role == KaromiProject.Utilities.Enums.RoleEnums.HR.ToString())
+                    {
+                        <br /> @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeId })
+                    }*@
+            </td>
+        </tr>
+    }
+
+</table>
+<p>
+    @Html.ActionLink("Go Back", "Index")
+</p>
+<div class="piechart" id="chartContainer" style="height: 200px; width: 100%;"></div>
+<script type="text/javascript">
+
+    let hrCount = @Model.Employees.Where(emp => emp.Role.Equals("HR")).Count();
+    let pmCount = @Model.Employees.Where(emp => emp.Role.Equals("PM")).Count();
+    let tlCount = @Model.Employees.Where(emp => emp.Role.Equals("TL")).Count();
+    let devCount = @Model.Employees.Where(emp => emp.Role.Equals("DEV")).Count();
+
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer", {
+            title: {
+                text: "Pie Chart for above list: "
+            },
+            data: [
+                {
+                    type: "pie",
+                    showInLegend: true,
+                    toolTipContent: "{y} - #percent %",
+                    legendText: "{indexLabel}",
+                    dataPoints: [
+                        { y: hrCount, indexLabel: "HR" },
+                        { y: pmCount, indexLabel: "Project Managers" },
+                        { y: tlCount, indexLabel: "Team Leads" },
+                        { y: devCount, indexLabel: "Developers" }
+                    ]
+                }
+            ]
+        });
+        chart.render();
+    }
+</script>

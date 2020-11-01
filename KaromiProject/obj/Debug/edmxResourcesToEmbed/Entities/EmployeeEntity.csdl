@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="karomiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeId" />
+    </Key>
+    <Property Name="EmployeeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="MobileNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Role" Relationship="Self.FK__Employee__RoleId__2C3393D0" FromRole="Employee" ToRole="Role" />
+    <NavigationProperty Name="EmployeeProjTeamXrefs" Relationship="Self.FK__EmployeeP__Emplo__2E1BDC42" FromRole="Employee" ToRole="EmployeeProjTeamXref" />
+  </EntityType>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="ProjectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="EmployeeProjTeamXrefs" Relationship="Self.FK__EmployeeP__Proje__2F10007B" FromRole="Project" ToRole="EmployeeProjTeamXref" />
+    <NavigationProperty Name="Teams" Relationship="Self.FK__Team__ProjectId__29572725" FromRole="Project" ToRole="Team" />
+    <Property Name="ProjectName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK__Employee__RoleId__2C3393D0" FromRole="Role" ToRole="Employee" />
+    <Property Name="RoleName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Team">
+    <Key>
+      <PropertyRef Name="TeamId" />
+    </Key>
+    <Property Name="TeamId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProjectId" Type="Int32" />
+    <NavigationProperty Name="Project" Relationship="Self.FK__Team__ProjectId__29572725" FromRole="Team" ToRole="Project" />
+    <NavigationProperty Name="EmployeeProjTeamXrefs" Relationship="Self.FK__EmployeeP__TeamI__300424B4" FromRole="Team" ToRole="EmployeeProjTeamXref" />
+    <Property Name="TeamName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="EmployeeProjTeamXref">
+    <Key>
+      <PropertyRef Name="EmployeeProjXrefId" />
+    </Key>
+    <Property Name="EmployeeProjXrefId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeId" Type="Int32" />
+    <Property Name="ProjectId" Type="Int32" />
+    <Property Name="TeamId" Type="Int32" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK__EmployeeP__Emplo__2E1BDC42" FromRole="EmployeeProjTeamXref" ToRole="Employee" />
+    <NavigationProperty Name="Project" Relationship="Self.FK__EmployeeP__Proje__2F10007B" FromRole="EmployeeProjTeamXref" ToRole="Project" />
+    <NavigationProperty Name="Team" Relationship="Self.FK__EmployeeP__TeamI__300424B4" FromRole="EmployeeProjTeamXref" ToRole="Team" />
+  </EntityType>
+  <Association Name="FK__Employee__RoleId__2C3393D0">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EmployeeP__Emplo__2E1BDC42">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="EmployeeProjTeamXref" Type="Self.EmployeeProjTeamXref" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeId" />
+      </Principal>
+      <Dependent Role="EmployeeProjTeamXref">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EmployeeP__Proje__2F10007B">
+    <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+    <End Role="EmployeeProjTeamXref" Type="Self.EmployeeProjTeamXref" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ProjectId" />
+      </Principal>
+      <Dependent Role="EmployeeProjTeamXref">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Team__ProjectId__29572725">
+    <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+    <End Role="Team" Type="Self.Team" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ProjectId" />
+      </Principal>
+      <Dependent Role="Team">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EmployeeP__TeamI__300424B4">
+    <End Role="Team" Type="Self.Team" Multiplicity="0..1" />
+    <End Role="EmployeeProjTeamXref" Type="Self.EmployeeProjTeamXref" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Team">
+        <PropertyRef Name="TeamId" />
+      </Principal>
+      <Dependent Role="EmployeeProjTeamXref">
+        <PropertyRef Name="TeamId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="karomiEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="Projects" EntityType="Self.Project" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="Teams" EntityType="Self.Team" />
+    <EntitySet Name="EmployeeProjTeamXrefs" EntityType="Self.EmployeeProjTeamXref" />
+    <AssociationSet Name="FK__Employee__RoleId__2C3393D0" Association="Self.FK__Employee__RoleId__2C3393D0">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EmployeeP__Emplo__2E1BDC42" Association="Self.FK__EmployeeP__Emplo__2E1BDC42">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeProjTeamXref" EntitySet="EmployeeProjTeamXrefs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EmployeeP__Proje__2F10007B" Association="Self.FK__EmployeeP__Proje__2F10007B">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="EmployeeProjTeamXref" EntitySet="EmployeeProjTeamXrefs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Team__ProjectId__29572725" Association="Self.FK__Team__ProjectId__29572725">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="Team" EntitySet="Teams" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EmployeeP__TeamI__300424B4" Association="Self.FK__EmployeeP__TeamI__300424B4">
+      <End Role="Team" EntitySet="Teams" />
+      <End Role="EmployeeProjTeamXref" EntitySet="EmployeeProjTeamXrefs" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
